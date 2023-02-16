@@ -1,0 +1,86 @@
+<mat-toolbar>
+  <div class="top-toolbar-container">
+    <img class="logo" src="{{ logoPath }}" routerLink="/home" />
+  </div>
+  <div class="middle-toolbar-container">
+    <ng-container>
+      <ul class="auth-template">
+        <li>
+          <button
+            mat-button
+            class="toolbar-buttons"
+            (click)="navigateTo('home')"
+          >
+            Home
+          </button>
+        </li>
+        <li>
+          <button
+            mat-button
+            class="toolbar-buttons"
+            (click)="navigateTo('about')"
+          >
+            About
+          </button>
+        </li>
+        <!-- <li>
+          <button mat-button class="toolbar-buttons" routerLink="">
+            Skills
+          </button>
+        </li> -->
+        <!-- <li>
+          <button
+            mat-button
+            class="toolbar-buttons"
+            (click)="navigateTo('projects')"
+          >
+            Projects
+          </button>
+        </li> -->
+        <li>
+          <button
+            mat-button
+            class="toolbar-buttons"
+            (click)="navigateTo('blog/home')"
+          >
+            Blog
+          </button>
+        </li>
+        <li class="bottom">
+          <button
+            mat-button
+            class="toolbar-buttons"
+            (click)="navigateTo('contact')"
+          >
+            Contact
+          </button>
+        </li>
+      </ul>
+    </ng-container>
+  </div>
+  <div class="bottom-toolbar-container">
+    <a
+      *ngIf="!darkTheme"
+      href="{{ githubAccountLink }}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img class="media-logo" src="{{ githubDarkIconPath }}" />
+    </a>
+    <a
+      *ngIf="darkTheme"
+      href="{{ githubAccountLink }}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img class="media-logo" src="{{ githubIconPath }}" />
+    </a>
+    <a
+      href="{{ linkedInAccountLink }}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img class="media-logo" src="{{ linkedInIconPath }}" />
+    </a>
+  </div>
+</mat-toolbar>

@@ -1,0 +1,8 @@
+@import './palettes.scss';
+
+$primary: mat-palette($md-primary, 500, 300, 700);
+$accent: mat-palette($md-accent, 500, 300, 700);
+$warn: mat-palette($mat-deep-orange, A200);
+
+// Add (primary, secondary, warn) to theme
+$dark-theme: mat-dark-theme($primary, $accent, $warn);

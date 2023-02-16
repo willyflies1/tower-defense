@@ -1,0 +1,71 @@
+// Mixins
+@mixin body-theme($theme) {
+  // Get palettes
+  $_background: map-get($theme, background);
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  // Get colors
+  $app-background-color: mat-color($_background, background);
+
+  body {
+    background-color: $app-background-color;
+  }
+  a {
+    color: mat-color($accent, 700);
+  }
+}
+
+@mixin button-theme($theme) {
+  $primary: mat-color(
+    map-get(
+      $map: $theme,
+      $key: primary,
+    ),
+    default
+  );
+  $primary-light: mat-color(
+    map-get(
+      $map: $theme,
+      $key: primary,
+    ),
+    200
+  );
+  $accent: mat-color(map-get($theme, accent), default);
+  $accent-light: mat-color(
+    map-get(
+      $map: $theme,
+      $key: accent,
+    ),
+    200
+  );
+
+  .mat-raised-button.mat-button-disabled.mat-button-disabled {
+    background-color: $primary-light;
+    color: $accent-light;
+  }
+}
+
+@mixin light-toolbar-theme($theme) {
+  $primary: mat-color(
+    map-get(
+      $map: $theme,
+      $key: primary,
+    ),
+    default
+  );
+
+  .mat-toolbar.mobile-toolbar.mat-toolbar-single-row {
+    background: $primary;
+    color: white;
+  }
+}
+
+@mixin dark-card-slide-theme($theme) {
+  $primary-contrast: mat-color(map-get($theme, primary), A200);
+  .card-slide-action-icon {
+    color: $primary-contrast !important;
+  }
+  .header-flip-icon {
+    color: $primary-contrast !important;
+  }
+}

@@ -1,0 +1,17 @@
+@use '@angular/material' as mat;
+@import './palettes.scss';
+
+
+// define 3 theme color
+// mat-palette accepts $palette-name, main, lighter and darker variants
+// $primary: mat-palette($mat-indigo, 700, 300, 900);
+// $accent: mat-palette($mat-light-blue, 700, 300, 900);
+$warn: mat-palette($mat-deep-orange, A200);
+
+$primary-color: mat-palette($md-primary, 500, 300, 700);
+$accent-color: mat-palette($md-accent, 500, 300, 700);
+// $background: mat.define-palette()
+
+// create theme (use mat-dark-theme for themes with dark backgrounds)
+// $light-theme: mat-light-theme($primary, $accent, $warn);
+$light-theme: mat-light-theme($primary-color, $accent-color, $warn);

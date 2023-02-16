@@ -1,1 +1,83 @@
-/* You can add global styles to this file, and also import other style files */
+@use "@angular/material" as mat;
+@import "@angular/material/theming";
+@include mat-core();
+
+// MDBootstrap
+// Font Awesome
+// @import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
+// @import "@fortawesome/fontawesome-free/scss/solid.scss";
+// @import "@fortawesome/fontawesome-free/scss/regular.scss";
+// @import "@fortawesome/fontawesome-free/scss/brands.scss";
+// MDB SCSS
+// @import "mdb-angular-ui-kit/assets/scss/mdb.scss";
+
+// Import my themes
+@import "/src/themes/light-theme.scss";
+@import "/src/themes/dark-theme.scss";
+@import "/src/themes/component-theme.scss";
+
+// Import component themes
+@import "/src/app/components/toolbar/_toolbar.component.scss";
+
+// Hunter's Test Site Settings
+// ---------------------------
+//
+//  1. Global
+//  2. Breakpoints
+//  3. The Grid
+//  4. Base Typography
+//  5. Typography Helpers
+
+// $BACKGROUND: #1a1a1a;
+// $LIGHT_BACKGROUND: #fafafa;
+// $DARK_BACKGROUND: #1a1a1a;
+// $PRIMARY: #4ecdc4;
+// $SECONDARY: #189ab4;
+// $ACCENT: #ff6b6b;
+// $BLUE_GREEN: #64ffda;
+// // $BLUE_GREEN: #75E6DA;
+// $BABY_BLUE: #9fe6ee;
+// $SLATE_GRAY: #8892b0;
+// $GUNMETAL: #151515;
+// $GUNMETAL_SHADE1: #3e434a;
+// $WHITE: #ffffff;
+
+@include angular-material-theme($light-theme);
+
+.light-theme {
+  @include angular-material-color($light-theme);
+  @include body-theme($light-theme);
+  @include button-theme($light-theme);
+  @include light-toolbar-theme(
+    $light-theme
+  ); // Currently only using in light-theme
+  // Component themes
+  @include sidenav-theme($light-theme);
+}
+
+.dark-theme {
+  @include angular-material-color($dark-theme);
+  @include body-theme($dark-theme);
+  @include button-theme($dark-theme);
+  @include dark-card-slide-theme($dark-theme);
+  @include sidenav-theme($dark-theme);
+}
+
+body {
+  margin: 0px;
+}
+
+.body {
+  height: calc(100% - 40px);
+}
+
+body.mat-typography {
+  // background: $BACKGROUND;
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+  // mat-toolbar.mobile-toolbar {
+  //   flex-direction: row;
+  // }
+}
