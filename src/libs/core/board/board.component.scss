@@ -1,0 +1,23 @@
+// app-board {
+//   display: block;
+//   height: inherit;
+:host {
+  height: inherit;
+  width: inherit;
+  display: inherit;
+}
+
+  .board-container {
+    display: flex;
+    height: inherit;
+    justify-content: center;
+
+    .tower-defense-canvas {
+      height: 864px;
+      width: 416px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+// }
