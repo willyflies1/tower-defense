@@ -1,14 +1,28 @@
-import { Coordinates } from "./coordinate";
+import { HttpClient } from '@angular/common/http';
+import { Coordinates } from './coordinate';
 
 export class Enemy {
   public position: { x: number; y: number };
-  private width: number;
-  private height: number;
+  public width: number;
+  public height: number;
+  private waypoints: [{ x: number; y: number }];
+  private waypointIndex: number = 0;
+  private waypointOffset: number = 16;
+  public center: { x: number; y: number };
+  private speed: number;
 
-  constructor({ enemyBase = { x: 0, y: 0 }}) {
-    this.position = {...enemyBase};
+  constructor({ enemyBase = { x: 0, y: 0 }, waypoints }) {
+    this.position = { ...enemyBase };
+    this.waypoints = waypoints;
+    console.log('waypoints', waypoints);
+    this.waypointIndex = 2;
     this.height = 32;
     this.width = 32;
+    this.speed = 1;
+    this.center = {
+      x: this.position.x + this.width / 2,
+      y: this.position.y + this.height / 2,
+    };
   }
 
   private draw(context) {
@@ -18,15 +32,27 @@ export class Enemy {
 
   update(context) {
     this.draw(context);
-    this.position.x += 1;
+
+    const waypoint: { x: number; y: number } =
+      this.waypoints[this.waypointIndex];
+    const yDistance = waypoint.y - this.center.y;
+    const xDistance = waypoint.x - this.center.x;
+    const angle = Math.atan2(yDistance, xDistance);
+
+    this.position.x += this.speed * Math.cos(angle);
+    this.position.y += this.speed * Math.sin(angle);
+    // this.center = this.position;
+    this.center = {
+      x: this.position.x + this.width / 2,
+      y: this.position.y + this.height / 2,
+    };
+
+    if (
+      Math.round(this.center.x) === Math.round(waypoint.x) &&
+      Math.round(this.center.y) === Math.round(waypoint.y) &&
+      this.waypointIndex < this.waypoints.length - 1
+    ) {
+      this.waypointIndex++;
+    }
   }
-
-  // public get position() {
-  //   return this.coordinates;
-  // }
-
-  // public set position(position: { x: number; y: number }) {
-  //   this.coordinates.x = position.x;
-  //   this.coordinates.y = position.y;
-  // }
 }

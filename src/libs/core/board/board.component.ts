@@ -15,12 +15,10 @@ export class BoardComponent implements OnInit {
   private boardImage;
   private waypoints;
   private boardContext;
-  private enemyBase: Coordinates = { x: 64, y: 288 };
-  private enemyCoordinates: { [key: string]: number } = {
-    x: 64,
-    y: 0,
-  };
+  private enemyBase!: Coordinates; // = { x: 64, y: 288 };
   private enemies: Enemy[] = [];
+  private enemyOffset: number = 16;
+  private numEnemies: number = 5;
 
   constructor(private http: HttpClient) {}
 
@@ -33,9 +31,12 @@ export class BoardComponent implements OnInit {
   }
 
   private getBoardAndWaypoints() {
-    this.waypoints = this.http.get(
-      '../../../assets/data/waypoints/waypoints.json'
-    );
+    this.http
+      .get('../../../assets/data/waypoints/waypoints.json')
+      .subscribe((points) => {
+        this.waypoints = points;
+        this.enemyBase = {x: this.waypoints[1].x-16, y: this.waypoints[1].y-16};
+      });
   }
 
   private setBoard() {
@@ -58,13 +59,8 @@ export class BoardComponent implements OnInit {
     this.boardImage = new Image();
 
     this.boardImage.onload = () => {
-      // Set first enemy
-      this.enemies.push(new Enemy({ enemyBase: this.enemyBase }));
-      setTimeout(() => {
-        this.enemies.push(
-          new Enemy({ enemyBase: { x: this.enemyBase.x-32, y: this.enemyBase.y } })
-        );
-      }, 1000);
+      this.setEnemies();
+
       this.animate();
 
       console.log('enemies', this.enemies);
@@ -73,33 +69,38 @@ export class BoardComponent implements OnInit {
       '../../../assets/gallery/board/tower-defense-mobile.png';
   }
 
+  /**
+   * Sets enemies on map per numEnemies set at interval 1s
+   */
+  private setEnemies() {
+    let i: number = 0;
+    const getEnemy = () => {
+      if (i < this.numEnemies) {
+        this.enemies.push(
+          new Enemy({ enemyBase: this.enemyBase, waypoints: this.waypoints })
+        );
+        i++;
+      } else {
+        clearInterval(enemyInterval);
+      }
+    };
+    const enemyInterval = setInterval(getEnemy, 1000);
+  }
+
   private animate() {
     requestAnimationFrame(this.animate.bind(this));
     this.boardContext.drawImage(this.boardImage, 0, 0);
 
-    // Enemy logic
-    for (let index of this.enemies.keys()) {
-      console.log(`Enemy#${index}`);
+    this.enemies.forEach((enemy, index) => {
+      // Remove enemy if they have meet user base
       if (
-        this.enemies[index].position.x > this.board.width ||
-        this.enemies[index].position.y > this.board.height
-      ) {
-        // Remove enemy due to out-of-bounds
+        Math.round(enemy.center.x) ===
+          this.waypoints[this.waypoints.length-1].x &&
+        Math.round(enemy.center.y) === this.waypoints[this.waypoints.length-1].y
+      ){
         this.enemies.splice(index, 1);
-      } else {
-        this.enemies[index].update(this.boardContext);
       }
-    }
-    // this.enemies.forEach((enemy, index) => {
-    //   if (
-    //     enemy.position.x > this.board.width ||
-    //     enemy.position.y > this.board.height
-    //   ) {
-    //     // Remove enemy due to out-of-bounds
-    //     this.enemies.splice(index, 1);
-    //   } else {
-    //     enemy.update(this.boardContext);
-    //   }
-    // });
+        enemy.update(this.boardContext);
+    });
   }
 }
