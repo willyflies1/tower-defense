@@ -1,7 +1,9 @@
 import { animate } from '@angular/animations';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Level } from 'src/libs/shared/enums/level';
 import { Coordinates, Enemy } from 'src/libs/shared/models';
+import { BoardService } from 'src/libs/core/services/board.service';
 // import  from '../../../assets/gallery/board/tower-defense-mobile.png';
 
 @Component({
@@ -14,29 +16,39 @@ export class BoardComponent implements OnInit {
   private board;
   private boardImage;
   private waypoints;
+  private placement;
   private boardContext;
   private enemyBase!: Coordinates; // = { x: 64, y: 288 };
   private enemies: Enemy[] = [];
   private enemyOffset: number = 16;
-  private numEnemies: number = 5;
+  private numEnemies: number = 10;
+  private timeBetweenSpawn: number = 1000;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private boardService: BoardService) {}
 
   ngOnInit(): void {
     this.board = document.querySelector('canvas');
 
     // Get and set board
-    this.getBoardAndWaypoints();
+    this.getWaypoints();
+    this.getPlacement();
     this.setBoard();
   }
 
-  private getBoardAndWaypoints() {
-    this.http
-      .get('../../../assets/data/waypoints/waypoints.json')
-      .subscribe((points) => {
+  private getWaypoints() {
+    this.boardService.getLvlWaypoints(Level.lvl1).subscribe((points) => {
         this.waypoints = points;
-        this.enemyBase = {x: this.waypoints[1].x-16, y: this.waypoints[1].y-16};
+        this.enemyBase = {
+          x: this.waypoints[1].x - 16,
+          y: this.waypoints[1].y - 16,
+        };
       });
+  }
+
+  private getPlacement() {
+    this.boardService.getLvlPlacement(Level.lvl1).subscribe( placement => {
+      this.placement = placement;
+    })
   }
 
   private setBoard() {
@@ -84,7 +96,7 @@ export class BoardComponent implements OnInit {
         clearInterval(enemyInterval);
       }
     };
-    const enemyInterval = setInterval(getEnemy, 1000);
+    const enemyInterval = setInterval(getEnemy, this.timeBetweenSpawn);
   }
 
   private animate() {
@@ -95,12 +107,13 @@ export class BoardComponent implements OnInit {
       // Remove enemy if they have meet user base
       if (
         Math.round(enemy.center.x) ===
-          this.waypoints[this.waypoints.length-1].x &&
-        Math.round(enemy.center.y) === this.waypoints[this.waypoints.length-1].y
-      ){
+          this.waypoints[this.waypoints.length - 1].x &&
+        Math.round(enemy.center.y) ===
+          this.waypoints[this.waypoints.length - 1].y
+      ) {
         this.enemies.splice(index, 1);
       }
-        enemy.update(this.boardContext);
+      enemy.update(this.boardContext);
     });
   }
 }

@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Coordinates } from './coordinate';
 
 export class Enemy {
